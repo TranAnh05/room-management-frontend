@@ -5,6 +5,7 @@ import Button from '~/components/common/Button'
 import MainLayout from '~/components/layouts/MainLayout'
 import { fetchRoomsByPropertyIdAPI } from '~/apis'
 import RoomCard from '~/components/Rooms/RoomCard'
+import CreateRoomModal from '~/components/Rooms/CreateRoomModal'
 
 function RoomPage() {
   const { propertyId } = useParams()
@@ -12,6 +13,7 @@ function RoomPage() {
   const [property, setProperty] = useState(null)
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const loadRoomData = useCallback(() => {
     if (!propertyId) return
@@ -60,7 +62,7 @@ function RoomPage() {
 
         <Button
           variant="primary"
-          onClick={() => console.log('Mở Modal Tạo Phòng')}
+          onClick={() => setIsModalOpen(true)}
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -104,6 +106,13 @@ function RoomPage() {
           </h3>
         </div>
       )}
+
+      <CreateRoomModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={loadRoomData}
+        propertyId={propertyId}
+      />
     </MainLayout>
   )
 }

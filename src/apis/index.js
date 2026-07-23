@@ -19,3 +19,9 @@ export const fetchRoomsByPropertyIdAPI = async (propertyId) => {
   const response = await axiosClient.get(`${API_ROOT}/rooms/property/${propertyId}`)
   return response.data
 }
+
+export const createRoomAPI = async (data) => {
+  const response = await axiosClient.post(`${API_ROOT}/rooms`, data)
+  toast.success('Tạo phòng thành công')
+  return response.data
+}
