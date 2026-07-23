@@ -5,6 +5,7 @@ import Button from '~/components/common/Button'
 import { fetchRoomsByPropertyIdAPI } from '~/apis'
 import RoomCard from '~/components/Rooms/RoomCard'
 import CreateRoomModal from '~/components/Rooms/CreateRoomModal'
+import AddTenantModal from '~/components/Tenants/AddTenantModal'
 
 function RoomPage() {
   const { propertyId } = useParams()
@@ -12,7 +13,11 @@ function RoomPage() {
   const [property, setProperty] = useState(null)
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const [isAddTenantModalOpen, setIsAddTenantModalOpen] = useState(false)
+  const [selectedRoom, setSelectedRoom] = useState(null)
 
   const loadRoomData = useCallback(() => {
     if (!propertyId) return
@@ -31,6 +36,12 @@ function RoomPage() {
   useEffect(() => {
     loadRoomData()
   }, [loadRoomData])
+
+  const handleOpenAddTenant = (room) => {
+    setSelectedRoom(room)
+    setIsAddTenantModalOpen(true)
+  }
+
   return (
     <>
       <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
@@ -94,7 +105,7 @@ function RoomPage() {
               key={room._id || room.id}
               room={room}
               onViewDetail={(id) => console.log('Xem chi tiết phòng:', id)}
-              onAddTenant={(id) => console.log('Thêm khách phòng:', id)}
+              onAddTenant={() => handleOpenAddTenant(room)}
             />
           ))}
         </div>
@@ -111,6 +122,13 @@ function RoomPage() {
         onClose={() => setIsModalOpen(false)}
         onSuccess={loadRoomData}
         propertyId={propertyId}
+      />
+
+      <AddTenantModal
+        isOpen={isAddTenantModalOpen}
+        onClose={() => setIsAddTenantModalOpen(false)}
+        onSuccess={loadRoomData}
+        room={selectedRoom}
       />
     </>
   )

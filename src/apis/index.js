@@ -25,3 +25,10 @@ export const createRoomAPI = async (data) => {
   toast.success('Tạo phòng thành công')
   return response.data
 }
+
+// APIs for Tenant
+export const createTenantAPI = async (data) => {
+  const response = await axiosClient.post(`${API_ROOT}/tenants`, data)
+  toast.success('Thêm người thuê thành công')
+  return response.data
+}
