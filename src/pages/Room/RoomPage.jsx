@@ -2,7 +2,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import Button from '~/components/common/Button'
-import MainLayout from '~/components/layouts/MainLayout'
 import { fetchRoomsByPropertyIdAPI } from '~/apis'
 import RoomCard from '~/components/Rooms/RoomCard'
 import CreateRoomModal from '~/components/Rooms/CreateRoomModal'
@@ -33,7 +32,7 @@ function RoomPage() {
     loadRoomData()
   }, [loadRoomData])
   return (
-    <MainLayout>
+    <>
       <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
         <Link
           to="/"
@@ -113,7 +112,7 @@ function RoomPage() {
         onSuccess={loadRoomData}
         propertyId={propertyId}
       />
-    </MainLayout>
+    </>
   )
 }
 

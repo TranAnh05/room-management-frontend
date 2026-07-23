@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useCallback, useEffect, useState } from 'react'
-import MainLayout from '~/components/layouts/MainLayout'
 import Button from '~/components/common/Button'
 import PropertyCard from '~/components/Properties/PropertyCard'
 import { fetchPropertiesAPI } from '~/apis'
@@ -27,7 +26,7 @@ function PropertyPage() {
   }, [fetchPropertyList])
 
   return (
-    <MainLayout>
+    <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -97,7 +96,7 @@ function PropertyPage() {
         onClose={() => setIsCreateModalOpen(false)}
         onSuccess={fetchPropertyList}
       />
-    </MainLayout>
+    </>
   )
 }
 
