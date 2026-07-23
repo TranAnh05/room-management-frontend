@@ -1,17 +1,17 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useCallback, useEffect, useState } from 'react'
 import MainLayout from '~/components/layouts/MainLayout'
 import Button from '~/components/common/Button'
-import PropertyCard from '~/components/Property/PropertyCard'
+import PropertyCard from '~/components/Properties/PropertyCard'
 import { fetchPropertiesAPI } from '~/apis'
+import CreatePropertyModal from '~/components/Properties/CreatePropertyModal'
 
 function PropertyPage() {
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
 
-  useEffect(() => {
+  const fetchPropertyList = useCallback(() => {
     setLoading(true)
     fetchPropertiesAPI()
       .then((data) => {
@@ -22,9 +22,9 @@ function PropertyPage() {
       })
   }, [])
 
-  const handleSelectProperty = (propertyId) => {
-    navigate(`/properties/${propertyId}/rooms`)
-  }
+  useEffect(() => {
+    fetchPropertyList()
+  }, [fetchPropertyList])
 
   return (
     <MainLayout>
@@ -38,7 +38,7 @@ function PropertyPage() {
         <Button
           variant="primary"
           size="md"
-          onClick={() => console.log('Mở Modal Tạo Địa Điểm')}
+          onClick={() => setIsCreateModalOpen(true)}
           icon={
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -76,7 +76,6 @@ function PropertyPage() {
             <PropertyCard
               key={property._id}
               property={property}
-              onClick={handleSelectProperty}
             />
           ))}
         </div>
@@ -92,6 +91,12 @@ function PropertyPage() {
           </h3>
         </div>
       )}
+
+      <CreatePropertyModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={fetchPropertyList}
+      />
     </MainLayout>
   )
 }

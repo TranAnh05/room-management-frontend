@@ -1,8 +1,10 @@
-function PropertyCard({ property, onClick }) {
+import { Link } from 'react-router-dom'
+
+function PropertyCard({ property }) {
   const { _id, name, address } = property
   return (
-    <div
-      onClick={() => onClick?.(_id)}
+    <Link
+      to={`/properties/${_id}/rooms`}
       className="group bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs hover:shadow-xl hover:border-indigo-300 transition-all duration-300 transform hover:-translate-y-1 cursor-pointer flex flex-col justify-between"
     >
       <div>
@@ -83,7 +85,7 @@ function PropertyCard({ property, onClick }) {
           </svg>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
