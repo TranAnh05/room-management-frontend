@@ -2,11 +2,13 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { fetchRoomDetailAPI } from '~/apis'
+import { fetchRoomDetailAPI, checkoutRoomAPI } from '~/apis'
 import RoomInfoCard from '~/components/Rooms/RoomInfoCard'
 import TenantCard from '~/components/Tenants/TenantCard'
 import AddTenantModal from '~/components/Tenants/AddTenantModal'
 import Button from '~/components/common/Button'
+import ConfirmModal from '~/components/common/ConfirmModal'
+
 
 function RoomDetailPage() {
   const { roomId } = useParams()
@@ -15,6 +17,9 @@ function RoomDetailPage() {
   const [room, setRoom] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isAddTenantModalOpen, setIsAddTenantModalOpen] = useState(false)
+
+  const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const loadRoomDetail = useCallback(() => {
     if (!roomId) return
@@ -36,8 +41,20 @@ function RoomDetailPage() {
 
   const contractHolder = room?.tenants?.find((tenant) => tenant.isContractHolder)
 
-  const handleCheckout = () => {
-    toast.info(`Tính năng Trả phòng ${room?.roomNumber} đang được phát triển`)
+  const handleOpenCheckoutModal = () => {
+    setIsCheckoutModalOpen(true)
+  }
+
+  const handleConfirmCheckout = () => {
+    setIsSubmitting(true)
+    checkoutRoomAPI(roomId)
+      .then(() => {
+        loadRoomDetail()
+      })
+      .finally(() => {
+        setIsSubmitting(false)
+        setIsCheckoutModalOpen(false)
+      })
   }
 
   const handleViewHistory = () => {
@@ -92,7 +109,7 @@ function RoomDetailPage() {
             <RoomInfoCard
               room={room}
               contractHolder={contractHolder}
-              onCheckout={handleCheckout}
+              onCheckout={handleOpenCheckoutModal}
               onViewHistory={handleViewHistory}
             />
           </div>
@@ -176,6 +193,17 @@ function RoomDetailPage() {
         room={room}
       />
 
+      <ConfirmModal
+        isOpen={isCheckoutModalOpen}
+        onClose={() => setIsCheckoutModalOpen(false)}
+        onConfirm={handleConfirmCheckout}
+        title={`Xác nhận trả phòng ${room?.roomNumber}`}
+        description="Hành động này sẽ chuyển trạng thái các khách thuê hiện tại sang đã chuyển đi và đưa phòng về trạng thái trống."
+        variant="danger"
+        confirmText="Xác nhận trả phòng"
+        cancelText="Hủy bỏ"
+        isLoading={isSubmitting}
+      />
     </div>
   )
 }

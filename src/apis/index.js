@@ -31,6 +31,12 @@ export const fetchRoomDetailAPI = async (roomId) => {
   return response.data
 }
 
+export const checkoutRoomAPI = async (roomId) => {
+  const response = await axiosClient.put(`${API_ROOT}/tenants/checkout/${roomId}`)
+  toast.success('Bạn vừa thực hiện trả phòng thành công!')
+  return response.data
+}
+
 // APIs for Tenant
 export const createTenantAPI = async (data) => {
   const response = await axiosClient.post(`${API_ROOT}/tenants`, data)
