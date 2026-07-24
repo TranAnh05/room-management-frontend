@@ -8,7 +8,7 @@ import TenantCard from '~/components/Tenants/TenantCard'
 import AddTenantModal from '~/components/Tenants/AddTenantModal'
 import Button from '~/components/common/Button'
 import ConfirmModal from '~/components/common/ConfirmModal'
-
+import AddMemberModal from '~/components/Tenants/AddMemberModal'
 
 function RoomDetailPage() {
   const { roomId } = useParams()
@@ -20,6 +20,8 @@ function RoomDetailPage() {
 
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
 
   const loadRoomDetail = useCallback(() => {
     if (!roomId) return
@@ -55,6 +57,19 @@ function RoomDetailPage() {
         setIsSubmitting(false)
         setIsCheckoutModalOpen(false)
       })
+  }
+
+  const handleOpenAddModal = () => {
+    if (room?.tenants?.length > 0) {
+      setIsAddMemberModalOpen(true)
+    } else {
+      setIsAddTenantModalOpen(true)
+    }
+  }
+
+  const handleAddMemberSuccess = () => {
+    loadRoomDetail()
+    setIsAddMemberModalOpen(false)
   }
 
   const handleViewHistory = () => {
@@ -129,14 +144,14 @@ function RoomDetailPage() {
 
               <Button
                 variant="primary"
-                onClick={() => setIsAddTenantModalOpen(true)}
+                onClick={handleOpenAddModal}
                 icon={
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
                 }
               >
-                {room.tenants?.length > 0 ? 'Thêm người ở' : 'Thuê phòng'}
+                {room.tenants?.length > 0 && 'Thêm người ở' || 'Tạo hợp đồng thuê phòng'}
               </Button>
             </div>
 
@@ -203,6 +218,13 @@ function RoomDetailPage() {
         confirmText="Xác nhận trả phòng"
         cancelText="Hủy bỏ"
         isLoading={isSubmitting}
+      />
+
+      <AddMemberModal
+        isOpen={isAddMemberModalOpen}
+        onClose={() => setIsAddMemberModalOpen(false)}
+        onSuccess={handleAddMemberSuccess}
+        room={room}
       />
     </div>
   )
