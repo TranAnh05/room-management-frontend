@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useCallback, useEffect, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import Button from '~/components/common/Button'
 import { fetchRoomsByPropertyIdAPI } from '~/apis'
 import RoomCard from '~/components/Rooms/RoomCard'
@@ -9,6 +9,7 @@ import AddTenantModal from '~/components/Tenants/AddTenantModal'
 
 function RoomPage() {
   const { propertyId } = useParams()
+  const navigate = useNavigate()
 
   const [property, setProperty] = useState(null)
   const [rooms, setRooms] = useState([])
@@ -104,7 +105,7 @@ function RoomPage() {
             <RoomCard
               key={room._id || room.id}
               room={room}
-              onViewDetail={(id) => console.log('Xem chi tiết phòng:', id)}
+              onViewDetail={(id) => navigate(`/rooms/${id}`)}
               onAddTenant={() => handleOpenAddTenant(room)}
             />
           ))}
