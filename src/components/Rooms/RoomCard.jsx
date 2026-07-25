@@ -1,6 +1,6 @@
 import { formatCurrency } from '~/utils/formatters'
 
-function RoomCard({ room, onViewDetail, onAddTenant }) {
+function RoomCard({ room, onViewDetail, onAddTenant, onUpdate }) {
   const { _id, roomNumber, price, area, status, tenantName } = room
 
   const isAvailable = status?.toLowerCase() === 'available'
@@ -68,6 +68,14 @@ function RoomCard({ room, onViewDetail, onAddTenant }) {
             Thêm khách
           </button>
         )}
+
+        <button
+          type="button"
+          onClick={() => onUpdate?.(_id)}
+          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 transition-colors cursor-pointer"
+        >
+          Chỉnh sửa
+        </button>
 
         <button
           type="button"

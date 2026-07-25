@@ -6,6 +6,7 @@ import { fetchRoomsByPropertyIdAPI } from '~/apis'
 import RoomCard from '~/components/Rooms/RoomCard'
 import CreateRoomModal from '~/components/Rooms/CreateRoomModal'
 import AddTenantModal from '~/components/Tenants/AddTenantModal'
+import EditRoomModal from '~/components/Rooms/EditRoomModal'
 
 function RoomPage() {
   const { propertyId } = useParams()
@@ -18,7 +19,9 @@ function RoomPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [isAddTenantModalOpen, setIsAddTenantModalOpen] = useState(false)
-  const [selectedRoom, setSelectedRoom] = useState(null)
+  const [selectedRoom, setSelectedRoom] = useState({})
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
   const loadRoomData = useCallback(() => {
     if (!propertyId) return
@@ -41,6 +44,11 @@ function RoomPage() {
   const handleOpenAddTenant = (room) => {
     setSelectedRoom(room)
     setIsAddTenantModalOpen(true)
+  }
+
+  const handleOpenEditModal = (room) => {
+    setSelectedRoom(room)
+    setIsEditModalOpen(true)
   }
 
   return (
@@ -107,6 +115,7 @@ function RoomPage() {
               room={room}
               onViewDetail={(id) => navigate(`/rooms/${id}`)}
               onAddTenant={() => handleOpenAddTenant(room)}
+              onUpdate={() => handleOpenEditModal(room)}
             />
           ))}
         </div>
@@ -130,6 +139,13 @@ function RoomPage() {
         onClose={() => setIsAddTenantModalOpen(false)}
         onSuccess={loadRoomData}
         room={selectedRoom}
+      />
+
+      <EditRoomModal
+        roomId={selectedRoom._id}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={loadRoomData}
       />
     </>
   )

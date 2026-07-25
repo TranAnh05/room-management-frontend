@@ -44,6 +44,17 @@ export const getRoomRentalHistoryAPI = async (roomId, params = {}) => {
   return response.data
 }
 
+export const getRoomBasicAPI = async (roomId) => {
+  const response = await axiosClient.get(`${API_ROOT}/rooms/${roomId}/basic`)
+  return response.data
+}
+
+export const updateRoomAPI = async (roomId, updateData) => {
+  const response = await axiosClient.put(`${API_ROOT}/rooms/${roomId}`, updateData)
+  toast.success('Cập nhật thông tin phòng thành công')
+  return response.data
+}
+
 // APIs for Tenant
 export const createTenantAPI = async (data) => {
   const response = await axiosClient.post(`${API_ROOT}/tenants`, data)
