@@ -37,6 +37,13 @@ export const checkoutRoomAPI = async (roomId) => {
   return response.data
 }
 
+export const getRoomRentalHistoryAPI = async (roomId, params = {}) => {
+  const response = await axiosClient.get(`${API_ROOT}/rooms/${roomId}/rental-history`, {
+    params
+  })
+  return response.data
+}
+
 // APIs for Tenant
 export const createTenantAPI = async (data) => {
   const response = await axiosClient.post(`${API_ROOT}/tenants`, data)

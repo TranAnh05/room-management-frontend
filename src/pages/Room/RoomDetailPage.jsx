@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import { fetchRoomDetailAPI, checkoutRoomAPI } from '~/apis'
 import RoomInfoCard from '~/components/Rooms/RoomInfoCard'
 import TenantCard from '~/components/Tenants/TenantCard'
@@ -73,7 +72,7 @@ function RoomDetailPage() {
   }
 
   const handleViewHistory = () => {
-    toast.info(`Xem lịch sử thuê phòng ${room?.roomNumber}`)
+    navigate(`/rooms/${roomId}/history`)
   }
 
   return (
