@@ -7,7 +7,6 @@ import RoomCard from '~/components/Rooms/RoomCard'
 import CreateRoomModal from '~/components/Rooms/CreateRoomModal'
 import AddTenantModal from '~/components/Tenants/AddTenantModal'
 import EditRoomModal from '~/components/Rooms/EditRoomModal'
-import ConfirmModal from '~/components/common/ConfirmModal'
 
 function RoomPage() {
   const { propertyId } = useParams()
@@ -23,10 +22,6 @@ function RoomPage() {
   const [selectedRoom, setSelectedRoom] = useState({})
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-
-  const [selectedTenantForDelete, setSelectedTenantForDelete] = useState(null)
-  const [isDeleteTenantModalOpen, setIsDeleteTenantModalOpen] = useState(false)
-  const [isDeletingTenant, setIsDeletingTenant] = useState(false)
 
   const loadRoomData = useCallback(() => {
     if (!propertyId) return
@@ -54,15 +49,6 @@ function RoomPage() {
   const handleOpenEditModal = (room) => {
     setSelectedRoom(room)
     setIsEditModalOpen(true)
-  }
-
-  const handleOpenDeleteTenant = (tenant) => {
-    setSelectedTenantForDelete(tenant)
-    setIsDeleteTenantModalOpen(true)
-  }
-
-  const handleConfirmDeleteTenant = () => {
-
   }
 
   return (
