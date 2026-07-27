@@ -67,3 +67,9 @@ export const addMembersAPI = async (data) => {
   toast.success('Thêm thành viên thành công')
   return response.data
 }
+
+export const removeTenantMemberAPI = async (tenantId) => {
+  const response = await axiosClient.delete(`${API_ROOT}/tenants/${tenantId}`)
+  toast.success('Xóa thành viên thành công')
+  return response.data
+}

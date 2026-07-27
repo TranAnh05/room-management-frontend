@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { fetchRoomDetailAPI, checkoutRoomAPI } from '~/apis'
+import { fetchRoomDetailAPI, checkoutRoomAPI, removeTenantMemberAPI } from '~/apis'
 import RoomInfoCard from '~/components/Rooms/RoomInfoCard'
 import TenantCard from '~/components/Tenants/TenantCard'
 import AddTenantModal from '~/components/Tenants/AddTenantModal'
@@ -21,6 +21,10 @@ function RoomDetailPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const [isAddMemberModalOpen, setIsAddMemberModalOpen] = useState(false)
+
+  const [selectedTenantForDelete, setSelectedTenantForDelete] = useState(null)
+  const [isDeleteTenantModalOpen, setIsDeleteTenantModalOpen] = useState(false)
+  const [isDeletingTenant, setIsDeletingTenant] = useState(false)
 
   const loadRoomDetail = useCallback(() => {
     if (!roomId) return
@@ -73,6 +77,25 @@ function RoomDetailPage() {
 
   const handleViewHistory = () => {
     navigate(`/rooms/${roomId}/history`)
+  }
+
+  const handleOpenDeleteTenant = (tenant) => {
+    setSelectedTenantForDelete(tenant)
+    setIsDeleteTenantModalOpen(true)
+  }
+
+  const handleConfirmDeleteTenant = () => {
+    if (!selectedTenantForDelete) return
+
+    setIsDeletingTenant(true)
+    removeTenantMemberAPI(selectedTenantForDelete._id)
+      .then(() => {
+        loadRoomDetail()
+      })
+      .finally(() => {
+        setIsDeletingTenant(false)
+        setIsDeleteTenantModalOpen(false)
+      })
   }
 
   return (
@@ -157,7 +180,11 @@ function RoomDetailPage() {
             {room.tenants && room.tenants.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {room.tenants.map((tenant) => (
-                  <TenantCard key={tenant._id} tenant={tenant} />
+                  <TenantCard
+                    key={tenant._id}
+                    tenant={tenant}
+                    onRemove={handleOpenDeleteTenant}
+                  />
                 ))}
               </div>
             ) : (
@@ -217,6 +244,23 @@ function RoomDetailPage() {
         confirmText="Xác nhận trả phòng"
         cancelText="Hủy bỏ"
         isLoading={isSubmitting}
+      />
+
+      <ConfirmModal
+        isOpen={isDeleteTenantModalOpen}
+        onClose={() => setIsDeleteTenantModalOpen(false)}
+        onConfirm={handleConfirmDeleteTenant}
+        title="Xác nhận xóa thành viên"
+        description={
+          <>
+            Bạn có chắc chắn muốn xóa thành viên{' '}
+            <strong className="text-slate-900 font-bold">{selectedTenantForDelete?.fullName}</strong> ra khỏi phòng trọ này?
+          </>
+        }
+        variant="danger"
+        confirmText="Xác nhận"
+        cancelText="Hủy bỏ"
+        isLoading={isDeletingTenant}
       />
 
       <AddMemberModal
