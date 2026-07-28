@@ -73,3 +73,15 @@ export const removeTenantMemberAPI = async (tenantId) => {
   toast.success('Xóa thành viên thành công')
   return response.data
 }
+
+// APIs for Auth
+export const loginAPI = async (data) => {
+  const response = await axiosClient.post(`${API_ROOT}/users/login`, data)
+  toast.success('Đăng nhập thành công')
+  return response.data
+}
+
+export const logoutAPI = async () => {
+  const response = await axiosClient.delete(`${API_ROOT}/users/logout`)
+  return response.data
+}

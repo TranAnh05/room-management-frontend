@@ -1,4 +1,27 @@
+import { useNavigate } from 'react-router-dom'
+import { logoutAPI } from '~/apis'
+import { useAuthStore } from '~/stores/useAuthStore'
+import Button from '~/components/common/Button'
+import { toast } from 'react-toastify'
+
 function Header() {
+  const navigate = useNavigate()
+  const clearUserInfo = useAuthStore((state) => state.clearUserInfo)
+
+  const handleLogout = () => {
+    logoutAPI()
+      .then(() => {
+        toast.success('Đăng xuất thành công!')
+        clearUserInfo()
+        navigate('/login')
+      })
+      .catch(() => {
+        toast.success('Đăng xuất thành công!')
+        clearUserInfo()
+        navigate('/login')
+      })
+  }
+
   return (
     <header className="sticky top-0 z-30 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -32,6 +55,18 @@ function Header() {
             </p>
           </div>
         </div>
+
+        <Button
+          variant="secondary"
+          onClick={handleLogout}
+          icon={
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+          }
+        >
+          Đăng xuất
+        </Button>
       </div>
     </header>
   )
