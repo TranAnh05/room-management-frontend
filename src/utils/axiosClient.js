@@ -40,8 +40,10 @@ axiosClient.interceptors.response.use(
 
     // Xu ly tap trung hien thi thong bao loi tra ve tu api
     let errorMessage = error?.message
-    if (error.response?.data?.message) {
-      errorMessage = error.response?.data?.message
+    if (error.response?.data && typeof error.response?.data === 'object' ) {
+      errorMessage = error.response?.data?.message || errorMessage
+    } else {
+      errorMessage = 'Có lỗi xảy ra, vui lòng thử lại sau.'
     }
 
     if (error.response?.status !== 410) {
