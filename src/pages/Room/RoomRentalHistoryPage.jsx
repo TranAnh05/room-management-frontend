@@ -5,6 +5,7 @@ import RentalHistoryBlock from '~/components/Rooms/RentalHistoryBlock'
 import { useParams, useNavigate } from 'react-router-dom'
 import { formatCurrency } from '~/utils/formatters'
 import Pagination from '~/components/common/Pagination'
+import ScrollSection from '~/components/common/ScrollSection'
 
 function RoomRentalHistoryPage() {
   const { roomId } = useParams()
@@ -128,11 +129,13 @@ function RoomRentalHistoryPage() {
           {history.map((sessionGroup, index) => {
             const sessionIndex = (pagination.page - 1) * pagination.limit + index
             return (
-              <RentalHistoryBlock
-                key={`${sessionGroup.rentEndDate}-${index}`}
-                group={sessionGroup}
-                index={sessionIndex}
-              />
+              <ScrollSection>
+                <RentalHistoryBlock
+                  key={`${sessionGroup.rentEndDate}-${index}`}
+                  group={sessionGroup}
+                  index={sessionIndex}
+                />
+              </ScrollSection>
             )
           })}
         </div>
