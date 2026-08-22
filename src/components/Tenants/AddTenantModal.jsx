@@ -43,9 +43,9 @@ function AddTenantModal({ isOpen, onClose, onSuccess, room }) {
   const watchTenants = watch('tenants')
   const watchQuantity = watch('quantity')
 
-  // Reset form khi modal mở/đóng
   useEffect(() => {
     if (isOpen) {
+      document.body.style.overflow = 'hidden'
       reset({
         deposit: '',
         rentEndDate: '',
@@ -59,12 +59,18 @@ function AddTenantModal({ isOpen, onClose, onSuccess, room }) {
           }
         ]
       })
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
     }
   }, [isOpen, reset])
 
   if (!isOpen) return null
 
   const handleClose = () => {
+    document.body.style.overflow = 'unset'
     reset()
     onClose()
   }
@@ -156,94 +162,96 @@ function AddTenantModal({ isOpen, onClose, onSuccess, room }) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-6 space-y-6">
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="sm:col-span-1">
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Số lượng người ở
-              </label>
-              <div className="flex items-center">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Số lượng người ở
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={watchQuantity}
+                    onChange={handleQuantityChange}
+                    className="w-full px-3.5 py-2 bg-white rounded-xl border border-slate-200 text-xs font-bold text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all text-center"
+                  />
+                </div>
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Tiền cọc (VNĐ) <span className="text-rose-500">*</span>
+                </label>
                 <input
                   type="number"
-                  min="1"
-                  max="10"
-                  value={watchQuantity}
-                  onChange={handleQuantityChange}
-                  className="w-full px-3.5 py-2 bg-white rounded-xl border border-slate-200 text-xs font-bold text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-all text-center"
+                  placeholder="VD: 3000000"
+                  className={`w-full px-3.5 py-2 bg-white rounded-xl border text-xs transition-all focus:outline-none ${
+                    errors.deposit
+                      ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                      : 'border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20'
+                  }`}
+                  {...register('deposit', {
+                    required: 'Vui lòng nhập tiền cọc',
+                    min: { value: 0, message: 'Tiền cọc không âm' }
+                  })}
                 />
+                {errors.deposit && (
+                  <p className="mt-1 text-[11px] text-rose-500 font-medium">
+                    {errors.deposit.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="sm:col-span-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Ngày hết hợp đồng <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  className={`w-full px-3.5 py-2 bg-white rounded-xl border text-xs transition-all focus:outline-none ${
+                    errors.rentEndDate
+                      ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                      : 'border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20'
+                  }`}
+                  {...register('rentEndDate', {
+                    required: 'Vui lòng chọn ngày hết hợp đồng'
+                  })}
+                />
+                {errors.rentEndDate && (
+                  <p className="mt-1 text-[11px] text-rose-500 font-medium">
+                    {errors.rentEndDate.message}
+                  </p>
+                )}
               </div>
             </div>
 
-            <div className="sm:col-span-1">
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Tiền cọc (VNĐ) <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="number"
-                placeholder="VD: 3000000"
-                className={`w-full px-3.5 py-2 bg-white rounded-xl border text-xs transition-all focus:outline-none ${
-                  errors.deposit
-                    ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20'
-                    : 'border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20'
-                }`}
-                {...register('deposit', {
-                  required: 'Vui lòng nhập tiền cọc',
-                  min: { value: 0, message: 'Tiền cọc không âm' }
-                })}
-              />
-              {errors.deposit && (
-                <p className="mt-1 text-[11px] text-rose-500 font-medium">
-                  {errors.deposit.message}
-                </p>
-              )}
-            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                  Danh sách khách lưu trú ({fields.length} người)
+                </h4>
+                <span className="text-[11px] text-indigo-600 font-medium bg-indigo-50 px-2.5 py-1 rounded-full">
+                  Vui lòng chọn 1 người làm Chủ hợp đồng
+                </span>
+              </div>
 
-            <div className="sm:col-span-1">
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                Ngày hết hợp đồng <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="date"
-                className={`w-full px-3.5 py-2 bg-white rounded-xl border text-xs transition-all focus:outline-none ${
-                  errors.rentEndDate
-                    ? 'border-rose-500 focus:ring-2 focus:ring-rose-500/20'
-                    : 'border-slate-200 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20'
-                }`}
-                {...register('rentEndDate', {
-                  required: 'Vui lòng chọn ngày hết hợp đồng'
-                })}
-              />
-              {errors.rentEndDate && (
-                <p className="mt-1 text-[11px] text-rose-500 font-medium">
-                  {errors.rentEndDate.message}
-                </p>
-              )}
+              {fields.map((field, index) => (
+                <TenantItemForm
+                  key={field.id}
+                  index={index}
+                  register={register}
+                  errors={errors.tenants?.[index]}
+                  isContractHolder={watchTenants?.[index]?.isContractHolder || false}
+                  onSelectContractHolder={handleSelectContractHolder}
+                />
+              ))}
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
-                Danh sách khách lưu trú ({fields.length} người)
-              </h4>
-              <span className="text-[11px] text-indigo-600 font-medium bg-indigo-50 px-2.5 py-1 rounded-full">
-                Vui lòng chọn 1 người làm Chủ hợp đồng
-              </span>
-            </div>
-
-            {fields.map((field, index) => (
-              <TenantItemForm
-                key={field.id}
-                index={index}
-                register={register}
-                errors={errors.tenants?.[index]}
-                isContractHolder={watchTenants?.[index]?.isContractHolder || false}
-                onSelectContractHolder={handleSelectContractHolder}
-              />
-            ))}
-          </div>
-
-          <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 sticky bottom-0 bg-white">
+          <div className="px-6 py-4 border-t border-slate-100 bg-white flex items-center justify-end gap-3 shrink-0">
             <Button
               type="button"
               variant="secondary"
@@ -261,7 +269,6 @@ function AddTenantModal({ isOpen, onClose, onSuccess, room }) {
               Tạo
             </Button>
           </div>
-
         </form>
       </div>
     </div>
