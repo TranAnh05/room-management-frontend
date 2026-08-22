@@ -50,24 +50,22 @@ function RoomRentalHistoryPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-16 animate-fadeIn">
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 flex-wrap">
+    <div className="max-w-7xl mx-auto pb-12 animate-fadeIn">
+      <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-semibold cursor-pointer"
+            className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium cursor-pointer shrink-0 whitespace-nowrap"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
-            Quay lại
+            Quay lại chi tiết phòng
           </button>
           <span>/</span>
-          <span className="text-slate-400 font-normal">Chi tiết phòng</span>
-          <span>/</span>
           <span className="text-slate-900 font-bold truncate">
-            Lịch sử thuê phòng {room?.roomNumber}
+            Lịch sử thuê phòng {room?.roomNumber || ''}
           </span>
         </div>
       </div>
@@ -98,7 +96,7 @@ function RoomRentalHistoryPage() {
               </div>
               <div className="w-px h-8 bg-white/20" />
               <div className="px-3 py-1 text-center">
-                <span className="text-[10px] uppercase font-bold text-indigo-200 block">Diện tích</span>
+                <span className="text-[10px] uppercase font-bold text-indigo-200 block whitespace-nowrap">Diện tích</span>
                 <span className="text-base sm:text-lg font-extrabold text-white">
                   {room.area} m²
                 </span>
