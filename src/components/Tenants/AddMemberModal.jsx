@@ -33,6 +33,19 @@ function AddMemberModal({ isOpen, onClose, onSuccess, room }) {
     }
   }, [isOpen, reset])
 
+  // Lock scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
   if (!isOpen) return null
 
   const onSubmit = (data) => {
@@ -63,7 +76,7 @@ function AddMemberModal({ isOpen, onClose, onSuccess, room }) {
       />
 
       <div className="flex min-h-full items-center justify-center p-3 sm:p-4 text-center">
-        <div className="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all w-full max-w-3xl border border-slate-100 animate-scaleUp">
+        <div className="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all w-full max-w-3xl max-h-[90vh] flex flex-col border border-slate-100 animate-scaleUp">
           <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/50">
             <div>
               <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-600 block mb-0.5">
@@ -86,8 +99,8 @@ function AddMemberModal({ isOpen, onClose, onSuccess, room }) {
             </button>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="p-5 sm:p-6">
-            <div className="max-h-[60vh] overflow-y-auto pr-1 space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto p-5 sm:p-6">
+            <div className="pr-1 space-y-4">
               {fields.map((field, index) => {
                 const memberErrors = errors?.tenants?.[index]
                 return (
