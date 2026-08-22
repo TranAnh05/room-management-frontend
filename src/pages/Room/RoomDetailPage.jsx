@@ -101,11 +101,11 @@ function RoomDetailPage() {
   return (
     <div className="max-w-7xl mx-auto pb-12 animate-fadeIn">
       <div className="mb-6 flex items-center justify-between gap-4 flex-wrap">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
           <button
             type="button"
             onClick={() => navigate('/')}
-            className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium cursor-pointer"
+            className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium cursor-pointer shrink-0 whitespace-nowrap"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -113,7 +113,7 @@ function RoomDetailPage() {
             Danh sách địa điểm
           </button>
           <span>/</span>
-          <Link to={`/properties/${room?.propertyId}/rooms`} className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium cursor-pointer">
+          <Link to={`/properties/${room?.propertyId}/rooms`} className="hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium cursor-pointer shrink-0 whitespace-nowrap">
             {room?.property?.name}
           </Link>
           <span>/</span>
